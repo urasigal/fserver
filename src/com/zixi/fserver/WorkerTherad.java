@@ -27,7 +27,7 @@ public class WorkerTherad extends Thread {
  
             while ((inputLine = in.readLine()) != null) {
             	out.println("output");
-                out.println(scriptExecutor.runScript());
+                out.println(scriptExecutor.runScript(inputLine));
                 out.println("accepted");
                 if (outputLine.equals("Bye"))
                     break;

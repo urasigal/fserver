@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import static com.zixi.fserver.Fmacros.*; 
 
 public class ScriptExecutor {
 	
@@ -14,17 +15,30 @@ public class ScriptExecutor {
 	private String ex  = "bug";
     private BufferedReader bre;
 	private Process process;
-	public int runScript() 
+	public int runScript(String inputFromClient) 
 	{
-		 StringBuffer sb = new StringBuffer();  
-		 StringBuffer sberr = new StringBuffer(); 
+		StringBuffer sb = new StringBuffer();  
+	    StringBuffer sberr = new StringBuffer(); 
 		System.out.println("Trying to run a script ....");
+		System.out.println("input from client is :" + inputFromClient );
 		try {
 			// -i filename (input)
 			// -y (global) Overwrite output files without asking.
 			// -t duration (input/output) When used as an output option (before an output filename), stop writing the output after its duration reaches duration.
 			// -ss position (input/output) When used as an output option (before an output filename), decodes but discards input until the timestamps reach position.
-			process = Runtime.getRuntime().exec("/root/ffmpeg_sources/ffmpeg/ffmpeg -i udp://10.7.0.150:5555 -y -f image2 -t 0.001 -ss 00:00:4 -s 640*480 /var/screen/testimg.jpg");
+			if(inputFromClient.equals(HLS))
+			{
+				process = Runtime.getRuntime().exec("/root/ffmpeg_sources/ffmpeg/ffmpeg  -i http://10.7.0.91:7777/feederout.m3u8 -y -f image2 -t 0.001 -ss 00:00:4 -s 640*480 /var/screen/testimg1.jpg");
+			}
+			else
+				if(inputFromClient.equals(FLV))
+				{
+					process = Runtime.getRuntime().exec("/root/ffmpeg_sources/ffmpeg/ffmpeg -i http://10.7.0.91:7777/test.flv -y -f image2 -t 0.001 -ss 00:00:4 -s 640*480 /var/screen/testimg.jpg");
+				}
+				else
+			{
+				process = Runtime.getRuntime().exec("/root/ffmpeg_sources/ffmpeg/ffmpeg -i udp://10.7.0.150:5555 -y -f image2 -t 0.001 -ss 00:00:4 -s 640*480 /var/screen/testimg.jpg");
+			}
 			InputStream is = process.getInputStream();
 			InputStreamReader  isr = new InputStreamReader(is);
 			String line;
@@ -55,6 +69,8 @@ public class ScriptExecutor {
 				if (line.toLowerCase().contains("left block unavailable for".toLowerCase()))
 					return STREAMISBAD;
 				if (line.toLowerCase().contains("error while decoding".toLowerCase()))
+					return STREAMISBAD;
+				if (line.toLowerCase().contains("Invalid data found when processing input".toLowerCase()))
 					return STREAMISBAD;
 					
 				System.out.println("error output ---------------------- >" + line);

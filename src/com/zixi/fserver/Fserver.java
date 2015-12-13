@@ -18,13 +18,12 @@ public class Fserver {
         int portNumber = Integer.parseInt("4445");
         boolean listening = true;
         ThreadHunter threadHunter = new ThreadHunter(timedThreads);
-        try (ServerSocket serverSocket = new ServerSocket(portNumber))
+        try (ServerSocket serverSocket = new ServerSocket(portNumber)) // Initialize block.
         { 
         	threadHunter.start();
             while (listening) 
             {
-            	
-	            Socket socket = serverSocket.accept();
+	            Socket socket = serverSocket.accept(); // Blocking there.
 	            WorkerTherad workerTherad = new WorkerTherad(socket);
 	            Long time = System.currentTimeMillis();
 	            System.out.println("Sys time " + time);
