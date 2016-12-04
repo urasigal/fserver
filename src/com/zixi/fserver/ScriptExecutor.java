@@ -26,14 +26,14 @@ public class ScriptExecutor {
 			// -y (global) Overwrite output files without asking.
 			// -t duration (input/output) When used as an output option (before an output filename), stop writing the output after its duration reaches duration.
 			// -ss position (input/output) When used as an output option (before an output filename), decodes but discards input until the timestamps reach position.
-			if(inputFromClient.equals(HLS))
+			if(inputFromClient.endsWith("m3u8"))
 			{
-				process = Runtime.getRuntime().exec("/root/ffmpeg_sources/ffmpeg/ffmpeg  -i http://10.7.0.91:7777/feederout.m3u8 -y -f image2 -t 0.001 -ss 00:00:4 -s 640*480 /var/screen/testimg1.jpg");
+				process = Runtime.getRuntime().exec("/root/ffmpeg_sources/ffmpeg/ffmpeg  -i " + inputFromClient  + " -y -f image2 -t 0.001 -ss 00:00:4 -s 640*480 /var/screen/testimg1.jpg");
 			}
 			else
-				if(inputFromClient.equals(FLV))
+				if(inputFromClient.endsWith("flv"))
 				{
-					process = Runtime.getRuntime().exec("/root/ffmpeg_sources/ffmpeg/ffmpeg -i http://10.7.0.91:7777/test.flv -y -f image2 -t 0.001 -ss 00:00:4 -s 640*480 /var/screen/testimg.jpg");
+					process = Runtime.getRuntime().exec("/root/ffmpeg_sources/ffmpeg/ffmpeg  -i " + inputFromClient  + " -y -f image2 -t 0.001 -ss 00:00:4 -s 640*480 /var/screen/testimg1.jpg");
 				}
 				else
 			{
@@ -50,9 +50,9 @@ public class ScriptExecutor {
 				sb.append(line);
 				if(Thread.currentThread().isInterrupted())
 				{
-					return STREAMISBAD;
+					throw new IOException("Interupted thread");
 				}
-				 System.out.println( "output is -------------------- " +line);
+				 System.out.println( "output is -------------------- " + line);
 			}
 			
 			while ((line = bre.readLine()) != null) 
@@ -60,18 +60,30 @@ public class ScriptExecutor {
 				sberr.append(line);
 				if(Thread.currentThread().isInterrupted())
 				{
-					System.out.println("I'm dead ...");
+					System.out.println("I'm dead ............................................");
 					return STREAMISBAD;
 				}
 				
 				if (line.toLowerCase().contains("Missing reference picture, default".toLowerCase()))
-					return STREAMISBAD;
+				{
+					System.out.println("Hello from server - cause is: " + line);
+					return STREAMISBAD; 
+				}
 				if (line.toLowerCase().contains("left block unavailable for".toLowerCase()))
+				{
+					System.out.println("Hello from server - cause is: " + line);
 					return STREAMISBAD;
+				}
 				if (line.toLowerCase().contains("error while decoding".toLowerCase()))
+				{
+					System.out.println("Hello from server - cause is: " + line);
 					return STREAMISBAD;
+				}
 				if (line.toLowerCase().contains("Invalid data found when processing input".toLowerCase()))
+				{
+					System.out.println("Hello from server - cause is: " + line);
 					return STREAMISBAD;
+				}
 					
 				System.out.println("error output ---------------------- >" + line);
 			}

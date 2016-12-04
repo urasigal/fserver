@@ -11,7 +11,8 @@ public class WorkerTherad extends Thread {
         super("worker thread");
         this.socket = socket;
     }
-     
+    
+    // this function will be run on each a new request to the server.
     public void run() {
  
         try (

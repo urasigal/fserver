@@ -13,12 +13,18 @@ public class Fserver {
 		return timedThreads;
 	}
 
+    
+    // Entry point.
 	public static void main(String[] args) throws IOException {
-
+		
+		System.out.println("Hello I'm listening to: " + 4445);
         int portNumber = Integer.parseInt("4445");
         boolean listening = true;
         ThreadHunter threadHunter = new ThreadHunter(timedThreads);
-        try (ServerSocket serverSocket = new ServerSocket(portNumber)) // Initialize block.
+        
+        
+        // Open a socket.
+        try (ServerSocket serverSocket = new ServerSocket(portNumber)) // The try-with-resources Statement.
         { 
         	threadHunter.start();
             while (listening) 
@@ -29,9 +35,9 @@ public class Fserver {
 	            System.out.println("Sys time " + time);
 	            Fserver.getTimedThreads().put(workerTherad, System.currentTimeMillis());
 	            workerTherad.start();
-            
 	        }
-	    } catch (IOException e) {
+	    }
+        catch (IOException e) {
             System.err.println("Could not listen on port " + portNumber);
             System.exit(-1);
         }
