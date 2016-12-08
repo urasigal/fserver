@@ -9,16 +9,17 @@ import static com.zixi.fserver.Fmacros.*;
 
 public class ScriptExecutor {
 	
-	private static final int STREAMISGOOD  = 1;
-	static private final int STREAMISBAD   = 0 ; 
+	private static final int 	STREAMISGOOD  = 1;
+	static private final int 	STREAMISBAD   = 0 ; 
 	
-	private String ex  = "bug";
-    private BufferedReader bre;
-	private Process process;
+	private String 				ex 			  = "bug";
+    private BufferedReader 		bre;
+	private Process 			process;
+	
 	public int runScript(String inputFromClient) 
 	{
-		StringBuffer sb = new StringBuffer();  
-	    StringBuffer sberr = new StringBuffer(); 
+		StringBuffer 		sb 		= new StringBuffer();  
+	    StringBuffer 		sberr 	= new StringBuffer(); 
 		System.out.println("Trying to run a script ....");
 		System.out.println("input from client is :" + inputFromClient );
 		try {
@@ -28,22 +29,24 @@ public class ScriptExecutor {
 			// -ss position (input/output) When used as an output option (before an output filename), decodes but discards input until the timestamps reach position.
 			if(inputFromClient.endsWith("m3u8"))
 			{
-				process = Runtime.getRuntime().exec("/root/ffmpeg_sources/ffmpeg/ffmpeg  -i " + inputFromClient  + " -y -f image2 -t 0.001 -ss 00:00:4 -s 640*480 /var/screen/testimg1.jpg");
+				process = Runtime.getRuntime().exec("/root/ffmpeg_sources_new/ffmpeg/ffmpeg  -i " + inputFromClient  + " -y -f image2 -t 0.001 -ss 00:00:4 -s 640*480 /var/screen/testimg1.jpg");
 			}
 			else
 				if(inputFromClient.endsWith("flv"))
 				{
-					process = Runtime.getRuntime().exec("/root/ffmpeg_sources/ffmpeg/ffmpeg  -i " + inputFromClient  + " -y -f image2 -t 0.001 -ss 00:00:4 -s 640*480 /var/screen/testimg1.jpg");
+					process = Runtime.getRuntime().exec("/root/ffmpeg_sources_new/ffmpeg/ffmpeg  -i " + inputFromClient  + " -y -f image2 -t 0.001 -ss 00:00:4 -s 640*480 /var/screen/testimg1.jpg");
 				}
 				else
 			{
-				process = Runtime.getRuntime().exec("/root/ffmpeg_sources/ffmpeg/ffmpeg -i udp://10.7.0.150:5555 -y -f image2 -t 0.001 -ss 00:00:4 -s 640*480 /var/screen/testimg.jpg");
+				process = Runtime.getRuntime().exec("/root/ffmpeg_sources_new/ffmpeg/ffmpeg -i udp://10.7.0.150:5555 -y -f image2 -t 0.001 -ss 00:00:4 -s 640*480 /var/screen/testimg.jpg");
 			}
-			InputStream is = process.getInputStream();
-			InputStreamReader  isr = new InputStreamReader(is);
+			
+			InputStream 		is 		= 	process.getInputStream();
+			InputStreamReader  	isr 	= 	new InputStreamReader(is);
 			String line;
-			BufferedReader br = new BufferedReader(isr);	
-			BufferedReader bre = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+			BufferedReader 		br 		= 	new BufferedReader(isr);	
+			BufferedReader 		bre 	= 	new BufferedReader(new InputStreamReader(process.getErrorStream()));
+			
 			new ProcessKiller(process).start();
 			while ((line = br.readLine()) != null) 
 			{

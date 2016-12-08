@@ -28,6 +28,7 @@ public class WorkerTherad extends Thread {
  
             while ((inputLine = in.readLine()) != null) {
             	out.println("output");
+            	// In a case of HLS the "inputLine" equals to HLS URL.
                 out.println(scriptExecutor.runScript(inputLine));
                 out.println("accepted");
                 if (outputLine.equals("Bye"))

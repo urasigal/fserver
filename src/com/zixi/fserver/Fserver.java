@@ -8,7 +8,6 @@ public class Fserver {
 	
 	static private HashMap<WorkerTherad, Long> timedThreads = new HashMap<>();
 
-	
     public static HashMap<WorkerTherad, Long> getTimedThreads() {
 		return timedThreads;
 	}
@@ -21,7 +20,6 @@ public class Fserver {
         int portNumber = Integer.parseInt("4445");
         boolean listening = true;
         ThreadHunter threadHunter = new ThreadHunter(timedThreads);
-        
         
         // Open a socket.
         try (ServerSocket serverSocket = new ServerSocket(portNumber)) // The try-with-resources Statement.
