@@ -6,12 +6,13 @@ import java.util.Map;
 
 public class ThreadHunter extends Thread{
 	
+	private HashMap<WorkerTherad, Long> timedThreads = new HashMap<>(); 
+	
 	public ThreadHunter(HashMap<WorkerTherad, Long> timedThreads)
 	{
 		this.timedThreads = timedThreads;
 	}
 	
-	private HashMap<WorkerTherad, Long> timedThreads = new HashMap<>();
 	
 	 public HashMap<WorkerTherad, Long> getTimedThreads() {
 		return timedThreads;

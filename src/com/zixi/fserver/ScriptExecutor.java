@@ -13,15 +13,14 @@ public class ScriptExecutor {
 	static private final int 	STREAMISBAD   = 0 ; 
 	
 	private String 				ex 			  = "bug";
-    private BufferedReader 		bre;
 	private Process 			process;
 	
-	public int runScript(String inputFromClient) 
+	public Object[] runScript(String inputFromClient) 
 	{
 		StringBuffer 		sb 		= new StringBuffer();  
 	    StringBuffer 		sberr 	= new StringBuffer(); 
 		System.out.println("Trying to run a script ....");
-		System.out.println("input from client is :" + inputFromClient );
+		System.out.println("Input from client is :" + inputFromClient );
 		try {
 			// -i filename (input)
 			// -y (global) Overwrite output files without asking.
@@ -36,7 +35,43 @@ public class ScriptExecutor {
 				{
 					process = Runtime.getRuntime().exec("/root/ffmpeg_sources_new/ffmpeg/ffmpeg  -i " + inputFromClient  + " -y -f image2 -t 0.001 -ss 00:00:4 -s 640*480 /var/screen/testimg1.jpg");
 				}
-				else
+			else
+				if(inputFromClient.endsWith("analyze"))
+				{
+					process = Runtime.getRuntime().exec("/root/ffmpeg_sources_new/ffmpeg/ffprobe -i  udp://10.7.0.150:5554 -v quiet -print_format json -show_format -show_streams -hide_banner");
+					
+					InputStream 		is 		= 	process.getInputStream();
+					InputStreamReader  	isr 	= 	new InputStreamReader(is);
+					String line;
+					BufferedReader 		br 		= 	new BufferedReader(isr);
+					BufferedReader 		bre 	= 	new BufferedReader(new InputStreamReader(process.getErrorStream()));
+					
+					while ((line = br.readLine()) != null) 
+					{
+						sb.append(line);
+						if(Thread.currentThread().isInterrupted())
+						{
+							throw new IOException("Interupted thread");
+						}
+						 System.out.println( "output is -------------------- " + line);
+					}
+					
+					while ((line = bre.readLine()) != null) 
+					{
+						if(!line.startsWith("["))
+						{
+							
+						}
+						sb.append(line);
+						if(Thread.currentThread().isInterrupted())
+						{
+							System.out.println("I'm dead ............................................");
+							return new Object[] {0,""};
+						}
+					}
+					return new Object[] {1,sb.toString()};
+				}
+			else
 			{
 				process = Runtime.getRuntime().exec("/root/ffmpeg_sources_new/ffmpeg/ffmpeg -i udp://10.7.0.150:5555 -y -f image2 -t 0.001 -ss 00:00:4 -s 640*480 /var/screen/testimg.jpg");
 			}
@@ -64,39 +99,39 @@ public class ScriptExecutor {
 				if(Thread.currentThread().isInterrupted())
 				{
 					System.out.println("I'm dead ............................................");
-					return STREAMISBAD;
+					return new Object[] {0,""};
 				}
 				
 				if (line.toLowerCase().contains("Missing reference picture, default".toLowerCase()))
 				{
 					System.out.println("Hello from server - cause is: " + line);
-					return STREAMISBAD; 
+					return new Object[] {0,line};
 				}
 				if (line.toLowerCase().contains("left block unavailable for".toLowerCase()))
 				{
 					System.out.println("Hello from server - cause is: " + line);
-					return STREAMISBAD;
+					return new Object[] {0,line};
 				}
 				if (line.toLowerCase().contains("error while decoding".toLowerCase()))
 				{
 					System.out.println("Hello from server - cause is: " + line);
-					return STREAMISBAD;
+					return new Object[] {0,line};
 				}
 				if (line.toLowerCase().contains("Invalid data found when processing input".toLowerCase()))
 				{
 					System.out.println("Hello from server - cause is: " + line);
-					return STREAMISBAD;
+					return new Object[] {0,line};
 				}
 					
 				System.out.println("error output ---------------------- >" + line);
 			}
-			return STREAMISGOOD;
+			return new Object[] {1, "FFMPEG - no errors"};
 			
 		} catch (IOException e) { 
 			// TODO Auto-generated catch block
 			ex = e.getMessage();
 			System.out.println("Exception output ---------------------- >" + ex);
-			return STREAMISBAD;
+			return new Object[] {0,ex};
 		}
 		finally
 		{
