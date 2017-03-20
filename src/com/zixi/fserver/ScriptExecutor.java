@@ -11,7 +11,6 @@ public class ScriptExecutor {
 	
 	private static final int 	STREAMISGOOD  = 1;
 	static private final int 	STREAMISBAD   = 0 ; 
-	
 	private String 				ex 			  = "bug";
 	private Process 			process;
 	
