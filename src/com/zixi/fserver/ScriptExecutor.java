@@ -121,7 +121,11 @@ public class ScriptExecutor {
 					System.out.println("Hello from server - cause is: " + line);
 					return new Object[] {0,line};
 				}
-					
+				if (line.toLowerCase().contains("HTTP error 404 Not Found".toLowerCase()))
+				{
+					System.out.println("Hello from server - cause is: " + line);
+					return new Object[] {0,line};
+				}	
 				System.out.println("error output ---------------------- >" + line);
 			}
 			return new Object[] {1, "FFMPEG - no errors"};
