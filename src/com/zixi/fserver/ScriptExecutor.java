@@ -5,6 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import com.zixi.maxwell.MaxwellLogParser;
+
 import static com.zixi.fserver.Fmacros.*; 
 
 public class ScriptExecutor {
@@ -70,6 +73,20 @@ public class ScriptExecutor {
 					}
 					return new Object[] {1,sb.toString()};
 				}
+				else
+			if(inputFromClient.endsWith("maxwell"))
+			{
+				MaxwellLogParser maxwellLogParser = new MaxwellLogParser();
+				
+				try {
+					return new Object [] {new Long(maxwellLogParser.getRunningTimeFromLogFile("//root//log")), 
+					new Integer(maxwellLogParser.getNumberOfDroptsFromLogFile("//root//log"))};
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+				
 			else
 			{
 				process = Runtime.getRuntime().exec("/root/ffmpeg_sources_new/ffmpeg/ffmpeg -i udp://10.7.0.150:5555 -y -f image2 -t 0.001 -ss 00:00:4 -s 640*480 /var/screen/testimg.jpg");
