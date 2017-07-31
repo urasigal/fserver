@@ -80,7 +80,7 @@ public class MaxwellLogParser {
 						if(lineFromLog.startsWith("==>S") )
 						{
 							String [] statisticLineFromLogfile = lineFromLog.split(" ");
-							if(statisticLineFromLogfile.length > 10) //avoid accidentally abrupted file ending.
+							if(statisticLineFromLogfile.length > 10) //avoid accidentally abrupted
 							{
 								numberOfDroppedPackets = Integer.parseInt(statisticLineFromLogfile[10]);
 								break;
