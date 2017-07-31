@@ -80,8 +80,11 @@ public class MaxwellLogParser {
 						if(lineFromLog.startsWith("==>S") )
 						{
 							String [] statisticLineFromLogfile = lineFromLog.split(" ");
-							numberOfDroppedPackets = Integer.parseInt(statisticLineFromLogfile[10]);
-							break;
+							if(statisticLineFromLogfile.length > 10) //avoid accidentally abrupted file ending.
+							{
+								numberOfDroppedPackets = Integer.parseInt(statisticLineFromLogfile[10]);
+								break;
+							}
 						} }catch(NoSuchElementException e) { break; }
 				 }// end while
 			} else throw new Exception("Log file too small - cannot be parsed");
