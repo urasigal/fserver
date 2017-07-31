@@ -80,7 +80,7 @@ public class ScriptExecutor {
 				
 				try {
 					return new Object [] {new Long(maxwellLogParser.getRunningTimeFromLogFile("/root/log")), 
-					new Integer(maxwellLogParser.getNumberOfDroptsFromLogFile("/root/log"))};
+					(new Integer(maxwellLogParser.getNumberOfDroptsFromLogFile("/root/log"))).toString()};
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
