@@ -81,10 +81,10 @@ public class MaxwellLogParser {
 						{
 							String [] statisticLineFromLogfile = lineFromLog.split(" ");
 							numberOfDroppedPackets = Integer.parseInt(statisticLineFromLogfile[10]);
-							break; 
+							break;
 						} }catch(NoSuchElementException e) { break; }
 				 }// end while
-			}
+			} else throw new Exception("Log file too small - cannot be parsed");
 			closeLogFile();
 			return numberOfDroppedPackets;
 		}else throw new Exception("Can't open log file");
