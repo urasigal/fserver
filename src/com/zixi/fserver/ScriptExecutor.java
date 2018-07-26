@@ -37,6 +37,11 @@ public class ScriptExecutor {
 				{
 					process = Runtime.getRuntime().exec("/root/ffmpeg_sources_new/ffmpeg/ffmpeg  -i " + inputFromClient  + " -y -f image2 -t 0.001 -ss 00:00:4 -s 640*480 /var/screen/testimg1.jpg");
 				}
+				else
+					if(inputFromClient.endsWith("mpd"))
+					{
+						process = Runtime.getRuntime().exec("/root/ffmpeg_sources_new/ffmpeg/ffmpeg  -i " + inputFromClient  + " -y -f image2 -t 0.001 -ss 00:00:4 -s 640*480 /var/screen/testimg1.jpg");
+					}
 			else
 				if(inputFromClient.endsWith("analyze"))
 				{
